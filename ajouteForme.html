@@ -1,0 +1,150 @@
+{% extends 'source.html' %}
+
+{% load static %}
+
+{% block contenu %}
+<style>
+
+    #back{
+      left: 300px;
+      top: 100px;
+      width: 400px;
+      height: 200px;
+    }
+
+     body {
+        color:black;
+        background-color:white;
+        background-image:url({% static 'images/1.jpg' %});
+}
+
+</style>
+
+
+<center>
+
+<table class="tb">
+<div class="card card-body" id="back">
+<form action="" method="POST">
+  {% csrf_token %}
+    <p>On vous souhaite la bienvenue dans la page d'enregistrement</p>
+   <div class="modal-footer">
+    <button type="button" class="btn btn-primary" id="btn_ajout" data-toggle="modal" data-target="#exampleModal">Ajouter</button>
+   </div>
+</form>
+</div>
+</table>
+</center>
+<!-- ----------------------   Partie d'enregistrement  --------------------------------- -->
+
+ <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nouveau enregistrement</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="" class="form-horizontal" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                     <div class="form-group">
+                         <p id="result"></p>
+                     </div>
+
+                       <div class="row">
+                           <div class="col">
+                                <label for="recipientnom" class="col-form-label">Nom:</label>
+                               <input type="text" name="nom" class="form-control" id="recipientnom" required>
+                           </div>
+                           <div class="col">
+                                <label for="recipientprenom" class="col-form-label">Prenom:</label>
+                                <input type="text" name="prenom" class="form-control" id="recipientprenom" required>
+                           </div>
+                       </div>
+
+                 <div class="row">
+                     <div class="col">
+                        <label for="recipientdate" class="col-form-label">Date de naissance:</label>
+                        <input type="date" name="date_nais" class="form-control" id="recipientdate" onkeyup="calcul_age()" required>
+                     </div>
+                     <div class="col">
+                        <label for="recipientlieu" class="col-form-label"> Lieu:</label>
+                        <input type="text" name="lieu" class="form-control" id="recipientlieu" required>
+                     </div>
+                 </div>
+
+                 <div class="row">
+                       <label for="recipientsex" class="col-form-label">Sexe:</label>
+                        <select class="form-select" id="recipientsex" name="sex" aria-label="Default select example">
+                              <option selected>Selectionez les sexes</option>
+                              <option value="Homme">M</option>
+                              <option value="Femme">F</option>
+                        </select>
+                    </div>
+                   <div class="modal-footer">
+                        <a href="{% url 'acceuil' %}" ><img src="{% static 'images/retour.png' %}"></a>
+                        <button type="submit" class="btn btn-primary" id="submitbtn">Enregistrer</button>
+                   </div>
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+       <script>
+           function checkid(){
+                let un = document.getElementById("id").value;
+                $.ajax({
+                  url:"{% url 'identifiant' %}",
+                  type:"get",
+                  data:{ident: un},
+                  success:function(data){
+                    if(data == "Existe"){
+                      $("#result").html("Cet numéro est dejàs existé !!!Veuillez ressayer une autre si vous plait!").addClass("text-danger");
+                      $("#id").addClass("alert alert-danger");
+                      $("#submitbtn").attr("disabled", "disabled");
+                      $("#recipientnom").attr("disabled", "disabled");
+                      $("#recipientprenom").attr("disabled", "disabled");
+                      $("#recipientage").attr("disabled", "disabled");
+                      $("#recipientdate").attr("disabled", "disabled");
+                      $("#recipientlieu").attr("disabled", "disabled");
+                      $("#recipientsex").attr("disabled", "disabled");
+                      $("#recipientsituation").attr("disabled", "disabled");
+                      $("#recipientpere").attr("disabled", "disabled");
+                      $("#recipientmere").attr("disabled", "disabled");
+                      $("#recipientepous").attr("disabled", "disabled");
+
+                    }else{
+                      $("#result").html("");
+                      $("#id").removeClass("alert alert-danger");
+                      $("#submitbtn").prop('disabled', false);
+                      $("#recipientnom").prop('disabled', false);
+                      $("#recipientprenom").prop('disabled', false);
+                      $("#recipientage").prop('disabled', false);
+                      $("#recipientdate").prop('disabled', false);
+                      $("#recipientlieu").prop('disabled', false);
+                      $("#recipientsex").prop('disabled', false);
+                      $("#recipientsituation").prop('disabled', false);
+                      $("#recipientpere").prop('disabled', false);
+                      $("#recipientmere").prop('disabled', false);
+                      $("#recipientepous").prop('disabled', false);
+                    }
+                  }
+                })
+           }
+
+       </script>
+       <script>
+          function calcul_age(){
+            var date_nais = new Date(document.getElementById("#recipientdate").value);
+            var date_nasi_day = recipientdate.getDate();
+
+            var outup_value = document.getElementById("#recipientdate").value;
+            document.getElementById("#recipientage").innerHTML = outup_value;
+          }
+
+       </script>
+
+{% endblock %}
